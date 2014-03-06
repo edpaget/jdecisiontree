@@ -50,6 +50,11 @@ public class DecisionTree {
     return this.tasks;
   }
 
+  public String nextStep(String current, Object answer) {
+    ITask currentTask = tasks.get(current);
+    return currentTask.getNext(answer);
+  }
+
   public static DecisionTree FromJSON(String json) throws java.io.IOException {
     ObjectMapper mapper = new ObjectMapper();
     JsonNode root = mapper.readTree(json);
@@ -106,5 +111,4 @@ public class DecisionTree {
     }
     return map;
   }
-
 }

@@ -9,6 +9,7 @@ public abstract class Task implements ITask {
   public String question;
   public String key;
   public ArrayList<HashMap<String, Object>> choices;
+  private String next;
 
   public Task() {
   }
@@ -37,4 +38,9 @@ public abstract class Task implements ITask {
   public String getKey() {
     return this.key;
   }
+
+  public String getNext(Object answer) {
+    return this.next;
+  }
+
 }
