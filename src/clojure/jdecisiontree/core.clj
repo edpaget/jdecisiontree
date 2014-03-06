@@ -24,6 +24,7 @@
 
 (defmethod question :single
   [type & args]
+  (println "HERE")
   (apply build-question (SingleChoiceTask.) args))
 
 (defmethod question :multi

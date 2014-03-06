@@ -36,6 +36,11 @@ public abstract class Task implements ITask {
     return this;
   }
 
+  public Task withNext(String next) {
+    this.next = next;
+    return this;
+  }
+
   public Task withReadableKey(String rkey) {
     this.readableKey = rkey;
     return this;
