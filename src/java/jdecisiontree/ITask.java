@@ -8,5 +8,6 @@ public interface ITask {
   public ITask withKey(String key);
   public ITask withQuestion(String question);
   public ITask withChoices(ArrayList<HashMap<String, Object>> choices);
+  public ITask withReadableKey(String key);
   public String getNext(Object answer);
 }

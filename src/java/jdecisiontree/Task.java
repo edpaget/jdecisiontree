@@ -9,6 +9,7 @@ public abstract class Task implements ITask {
   public String question;
   public String key;
   public ArrayList<HashMap<String, Object>> choices;
+  public String readableKey;
   private String next;
 
   public Task() {
@@ -32,6 +33,11 @@ public abstract class Task implements ITask {
 
   public Task withChoices(ArrayList<HashMap<String, Object>> choices) {
     this.choices = choices;
+    return this;
+  }
+
+  public Task withReadableKey(String rkey) {
+    this.readableKey = rkey;
     return this;
   }
 
