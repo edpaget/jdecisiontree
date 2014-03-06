@@ -1,6 +1,6 @@
 (ns jdecisiontree.core
   (:require [clojure.walk :refer [stringify-keys]])
-  (:import [jdecisiontree DecisionTree SingleChoiceTask MultiChoiceTask]))
+  (:import [jdecisiontree DecisionTree ITask SingleChoiceTask MultiChoiceTask]))
 
 (defn tree
   [name first-question & questions]
@@ -11,15 +11,16 @@
 
 (defn- build-question
   [^ITask task label text opts & choices] 
-  (doto (task)
+  (doto task
     (.withKey label)
     (.withQuestion text)
     (.withNext (:next opts))
-    (when-let [rlabel {:readable-label opts}]
-      (.withReadableKey opts))
-    (.withChoices choices)))
+    (.withChoices choices))
+  (when (:readable-label opts)
+    (.withReadableKey task (:readable-label opts)))
+  task)
 
-(defmulti question* [type & args] (fn [type & args] type))
+(defmulti question (fn [type & args] type))
 
 (defmethod question :single
   [type & args]
@@ -27,7 +28,7 @@
 
 (defmethod question :multi
   [type & args]
-  (build-quesiton (MultiChoiceTask.) args))
+  (apply build-question (MultiChoiceTask.) args))
 
 (defn choice
   [value label & opts]
