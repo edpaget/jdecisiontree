@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.*;
 public abstract class Task implements ITask {
   public String question;
   public String key;
-  private ArrayList<HashMap<String, Object>> choices;
+  public ArrayList<HashMap<String, Object>> choices;
 
   public Task() {
   }
@@ -37,5 +37,4 @@ public abstract class Task implements ITask {
   public String getKey() {
     return this.key;
   }
-  
 }
