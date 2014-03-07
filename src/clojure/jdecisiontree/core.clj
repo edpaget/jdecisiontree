@@ -24,7 +24,6 @@
 
 (defmethod question :single
   [type & args]
-  (println "HERE")
   (apply build-question (SingleChoiceTask.) args))
 
 (defmethod question :multi
@@ -33,5 +32,4 @@
 
 (defn choice
   [value label & opts]
-  (println opts)
   (merge {"value" value "label" label} (stringify-keys (apply hash-map opts))))

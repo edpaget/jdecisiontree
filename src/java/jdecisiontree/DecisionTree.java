@@ -3,6 +3,7 @@ package jdecisiontree;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Iterator;
+import java.util.Collection;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -10,20 +11,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class DecisionTree {
   public String name;
   private String firstTask;
-  private HashMap<String, ITask> tasks;
+  private Map<String, ITask> tasks;
 
   public DecisionTree() {}
 
-  public DecisionTree(String name, String firstTask, HashMap<String, ITask> tasks) {
+  public DecisionTree(String name, String firstTask, Map<String, ITask> tasks) {
     this.name = name;
     this.firstTask = firstTask;
     this.tasks = tasks;
   }
 
-  public DecisionTree(String name, String firstTask, ITask[] tasks) {
+  public DecisionTree(String name, String firstTask, Collection<ITask> tasks) {
     this.name = name;
     this.firstTask = firstTask;
-    this.tasks = taskListToMap(tasks);
+    this.tasks = taskCollectionToMap(tasks);
   }
 
   public DecisionTree withName(String name) {
@@ -36,17 +37,17 @@ public class DecisionTree {
     return this;
   }
 
-  public DecisionTree withTasks(HashMap<String, ITask> tasks) {
+  public DecisionTree withTasks(Map<String, ITask> tasks) {
     this.tasks = tasks;
     return this;
   }
 
-  public DecisionTree withTasks(ITask[] tasks) {
-    this.tasks = taskListToMap(tasks);
+  public DecisionTree withTasks(Collection<ITask> tasks) {
+    this.tasks = taskCollectionToMap(tasks);
     return this;
   }
 
-  public HashMap<String, ITask> getTasks() {
+  public Map<String, ITask> getTasks() {
     return this.tasks;
   }
 
@@ -60,7 +61,7 @@ public class DecisionTree {
     JsonNode root = mapper.readTree(json);
 
     JsonNode JSONTasks = root.get("tasks");
-    HashMap<String, ITask> tasks = new HashMap<String, ITask>();
+    Map<String, ITask> tasks = new HashMap<String, ITask>();
     for(Iterator<Map.Entry<String, JsonNode>> f = JSONTasks.fields(); f.hasNext();) {
       Map.Entry<String, JsonNode> field = f.next();
       ITask task = taskFromJSONNodeByType(field.getKey(), field.getValue());
@@ -104,8 +105,8 @@ public class DecisionTree {
     return t.withKey(key);
   }
 
-  private HashMap<String, ITask> taskListToMap(ITask[] tasks) {
-    HashMap<String, ITask> map = new HashMap<String, ITask>(tasks.length);
+  private Map<String, ITask> taskCollectionToMap(Collection<ITask> tasks) {
+    Map<String, ITask> map = new HashMap<String, ITask>(tasks.toArray().length);
     for(ITask task : tasks) {
       map.put(task.getKey(), task);
     }
