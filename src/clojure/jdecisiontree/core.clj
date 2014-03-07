@@ -33,4 +33,5 @@
 
 (defn choice
   [value label & opts]
-  (merge {"value" value "label" label} (stringify-keys opts)))
+  (println opts)
+  (merge {"value" value "label" label} (stringify-keys (apply hash-map opts))))

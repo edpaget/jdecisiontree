@@ -1,21 +1,21 @@
 package jdecisiontree;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 import com.fasterxml.jackson.annotation.*;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public abstract class Task implements ITask {
   public String question;
   public String key;
-  public ArrayList<HashMap<String, Object>> choices;
+  public ArrayList<Map<String, Object>> choices;
   public String readableKey;
   private String next;
 
   public Task() {
   }
 
-  public Task(String key, String question, ArrayList<HashMap<String, Object>> choices) {
+  public Task(String key, String question, ArrayList<Map<String, Object>> choices) {
     this.key = key;
     this.question = question;
     this.choices = choices;
@@ -31,7 +31,7 @@ public abstract class Task implements ITask {
     return this;
   }
 
-  public Task withChoices(ArrayList<HashMap<String, Object>> choices) {
+  public Task withChoices(ArrayList<Map<String, Object>> choices) {
     this.choices = choices;
     return this;
   }
