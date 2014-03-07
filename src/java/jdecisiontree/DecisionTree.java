@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Iterator;
 import java.util.Collection;
+import java.util.ArrayList;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -51,9 +52,18 @@ public class DecisionTree {
     return this.tasks;
   }
 
-  public String nextStep(String current, Object answer) {
+  public String nextStep(String current, String answer) {
     ITask currentTask = tasks.get(current);
     return currentTask.getNext(answer);
+  }
+
+  public ArrayList<String> toColumns() {
+    ArrayList<String> columns = new ArrayList<String>(this.tasks.size());
+    for(ITask task : this.tasks.values()) {
+      columns.add(task.toCountColumn());
+      columns.addAll(task.toAnswerColumns());
+    }
+    return columns;
   }
 
   public static DecisionTree FromJSON(String json) throws java.io.IOException {
@@ -75,6 +85,7 @@ public class DecisionTree {
 
     return tree;
   }
+
 
   private static ITask taskFromJSONNodeByType(String key, JsonNode task) {
     ObjectMapper mp = new ObjectMapper();

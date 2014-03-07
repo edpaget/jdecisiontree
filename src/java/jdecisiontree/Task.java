@@ -10,20 +10,20 @@ import com.fasterxml.jackson.annotation.*;
 public abstract class Task implements ITask {
   public String question;
   public String key;
-  public ArrayList<HashMap<String, Object>> choices;
+  public ArrayList<HashMap<String, String>> choices;
   public String readableKey;
   private String next;
 
   public Task() {
   }
 
-  public Task(String key, String question, List<Map<String, Object>> choices) {
+  public Task(String key, String question, List<Map<String, String>> choices) {
     this.key = key;
     this.question = question;
     this.choices = formatChoiceList(choices);
   }
 
-  public Task(String key, String question, ArrayList<HashMap<String, Object>> choices) {
+  public Task(String key, String question, ArrayList<HashMap<String, String>> choices) {
     this.key = key;
     this.question = question;
     this.choices = choices;
@@ -39,12 +39,12 @@ public abstract class Task implements ITask {
     return this;
   }
 
-  public Task withChoices(ArrayList<HashMap<String, Object>> choices) {
+  public Task withChoices(ArrayList<HashMap<String, String>> choices) {
     this.choices = choices;
     return this;
   }
 
-  public Task withChoices(List<Map<String, Object>> choices) {
+  public Task withChoices(List<Map<String, String>> choices) {
     this.choices = formatChoiceList(choices);
     return this;
   }
@@ -63,7 +63,7 @@ public abstract class Task implements ITask {
     return this.key;
   }
 
-  public String getNext(Object answer) {
+  public String getNext(String answer) {
     return getNext();
   }
 
@@ -71,12 +71,49 @@ public abstract class Task implements ITask {
     return this.next;
   }
 
-  private ArrayList<HashMap<String, Object>> formatChoiceList(List<Map<String, Object>> choices) {
-    ArrayList cs = new ArrayList(choices.toArray().length);
-    for(Map<String, Object> choice : choices) {
-      cs.add(new HashMap(choice));
+  public String toCountColumn() {
+    return columnPrefix().concat("count");
+  }
+
+  public ArrayList<String> toAnswerColumns() {
+    ArrayList<String> columns = new ArrayList<String>(this.choices.size());
+    for (Map<String, String> choice : this.choices) {
+      columns.add(columnPrefix().concat(choice.get("label").replaceAll(" ", "_").toLowerCase()));
+    }
+    return columns;
+  }
+
+  public String getChoiceLabel(String choiceValue) {
+    Map<String, String> choice = choiceAtValue(choiceValue);
+    if (choice != null) {
+      return choice.get("label");
+    } else {
+      return null;
+    }
+  }
+
+  public HashMap<String, String> choiceAtValue(String value) {
+    for(HashMap<String, String> choice : this.choices) {
+      if (choice.get("value") == value) {
+        return choice;
+      }
+    }
+    return null;
+  }
+
+  private ArrayList<HashMap<String, String>> formatChoiceList(List<Map<String, String>> choices) {
+    ArrayList<HashMap<String,String>> cs = new ArrayList<HashMap<String,String>>(choices.toArray().length);
+    for(Map<String, String> choice : choices) {
+      cs.add(new HashMap<String,String>(choice));
     }
     return cs;
   }
 
+  private String columnPrefix() {
+    String column = "".concat(this.key);
+    if (this.readableKey != null) {
+      column = column.concat("_").concat(this.readableKey);
+    }
+    return column.concat("_");
+  }
 }
